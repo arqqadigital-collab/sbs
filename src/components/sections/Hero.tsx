@@ -10,7 +10,7 @@ const Hero = () => (
       playsInline 
       className="absolute inset-0 w-full h-full object-cover z-0"
     >
-      <source src="https://res.cloudinary.com/dcjufshrh/video/upload/v1771751095/abstract-swirl-pattern-in-blue-and-green-shades-2026-01-28-_yuxfg3.mp4" type="video/mp4" />
+      <source src="https://res.cloudinary.com/dcjufshrh/video/upload/v1772449781/Untitled-1_jykftk.mp4" type="video/mp4" />
     </video>
 
     {/* Dark overlay to ensure text remains legible over the video */}

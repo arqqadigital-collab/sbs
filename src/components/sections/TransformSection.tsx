@@ -1,108 +1,224 @@
-import { useState } from 'react';
-import { Check } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { 
+  Layers, Activity, BarChart3, Network,
+  ClipboardList, MonitorPlay, HeartPulse, CreditCard,
+  BrainCircuit, ShieldCheck, UserPlus, Plug
+} from 'lucide-react';
 
-const tabData: Record<string, { title: string; description: string; capabilities: string[]; cta: string; image: string }> = {
+interface TabCapability {
+  text: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+interface TabContent {
+  title: string;
+  description: string;
+  capabilities: TabCapability[];
+  cta: string;
+  video: string;
+}
+
+const tabData: Record<string, TabContent> = {
   'ERP & Enterprise Systems': {
     title: 'Power Your Business with Scalable ERP Ecosystems',
     description: 'Our ERP Ecosystem features top-tier platforms including Odoo ERP Solutions, Microsoft Dynamics 365 (Business Central & CE), and Zoho Business Applications.',
     capabilities: [
-      'ERP implementation & customization',
-      'Financial & operational automation',
-      'Real-time reporting & analytics',
-      'Process optimization & system integration'
+      { text: 'ERP implementation & customization', icon: Layers },
+      { text: 'Financial & operational automation', icon: Activity },
+      { text: 'Real-time reporting & analytics', icon: BarChart3 },
+      { text: 'Process optimization & system integration', icon: Network }
     ],
     cta: 'Explore ERP Solutions',
-    image: 'https://res.cloudinary.com/dcjufshrh/image/upload/v1771751606/ERP_qrrm9a.png'
+    video: 'https://res.cloudinary.com/dcjufshrh/video/upload/v1772451941/shutterstock_3425051791_dwov9w.mov'
   },
   'Healthcare Digital Transformation': {
     title: 'Healthcare Digital Transformation',
     description: 'Enhance patient care and streamline operations with our advanced healthcare technology solutions. We integrate data securely to provide actionable insights.',
     capabilities: [
-      'Comprehensive Electronic Health Records',
-      'Secure Telemedicine Platforms',
-      'Predictive Analytics for Patient Care',
-      'Streamlined Billing Systems'
+      { text: 'Comprehensive Electronic Health Records', icon: ClipboardList },
+      { text: 'Secure Telemedicine Platforms', icon: MonitorPlay },
+      { text: 'Predictive Analytics for Patient Care', icon: HeartPulse },
+      { text: 'Streamlined Billing Systems', icon: CreditCard }
     ],
     cta: 'Discover Healthcare Solutions',
-    image: 'https://res.cloudinary.com/dcjufshrh/image/upload/v1771751606/healthcare_k1ki2q.png'
+    video: 'https://res.cloudinary.com/dcjufshrh/video/upload/v1772451936/shutterstock_3813448213_sycqnq.mov'
   },
   'Technology & Professional Services': {
     title: 'Expert Support That Powers Successful Transformation',
     description: 'Leverage our specialized expertise and regional compliance knowledge to ensure your transformation projects are delivered securely, efficiently, and to the highest standards.',
     capabilities: [
-      'AI Healthcare Transformation Consulting',
-      'Compliance with DHA, DoH, ADHICS, and regional healthcare standards',
-      'Staff Augmentation & Managed Services',
-      'Implementation and Integration services'
+      { text: 'AI Healthcare Transformation Consulting', icon: BrainCircuit },
+      { text: 'Compliance with DHA, DoH, ADHICS, and regional healthcare standards', icon: ShieldCheck },
+      { text: 'Staff Augmentation & Managed Services', icon: UserPlus },
+      { text: 'Implementation and Integration services', icon: Plug }
     ],
     cta: 'Explore Technology Services',
-    image: 'https://res.cloudinary.com/dcjufshrh/image/upload/v1771751607/technnology_lt7jfs.png'
+    video: 'https://res.cloudinary.com/dcjufshrh/video/upload/v1772451931/shutterstock_3495967415_jh6uja.mov'
   }
 };
 
 const TransformSection = () => {
   const [activeTab, setActiveTab] = useState('ERP & Enterprise Systems');
+  const sectionRef = useRef<HTMLDivElement>(null);
   
   const tabs = Object.keys(tabData);
   const currentContent = tabData[activeTab];
 
+  // Scroll-based tab switching
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (!sectionRef.current) {
+            ticking = false;
+            return;
+          }
+          const { top, height } = sectionRef.current.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          
+          if (top <= windowHeight && top + height >= 0) {
+            const scrollableDistance = height - windowHeight;
+            if (scrollableDistance > 0) {
+              let progress = -top / scrollableDistance;
+              progress = Math.max(0, Math.min(1, progress));
+              
+              const index = Math.min(tabs.length - 1, Math.floor(progress * tabs.length));
+              
+              setActiveTab(prevTab => {
+                const newTab = tabs[index];
+                return prevTab !== newTab ? newTab : prevTab;
+              });
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [tabs]);
+
+  const handleTabClick = (tabName: string) => {
+    const index = tabs.indexOf(tabName);
+    if (!sectionRef.current) return;
+    const { top } = sectionRef.current.getBoundingClientRect();
+    const height = sectionRef.current.offsetHeight;
+    const windowHeight = window.innerHeight;
+    const scrollableDistance = height - windowHeight;
+    
+    if (scrollableDistance > 0) {
+      const targetScrollY = window.scrollY + top + (index / tabs.length) * scrollableDistance + 10;
+      window.scrollTo({
+        top: targetScrollY,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
-    <section className="py-24 bg-white px-4 md:px-8 max-w-7xl mx-auto text-center">
-      <h2 className="text-4xl font-bold text-[#003366] mb-4">
-        How We Transform <span className="text-lime-500">Your Business</span>
-      </h2>
-      <p className="text-gray-600 max-w-3xl mx-auto mb-12">
-        Our solutions combine technology, automation, and industry expertise to help organizations modernize operations and accelerate digital growth.
-      </p>
+    <div ref={sectionRef} className="relative h-[200vh] bg-white">
+      <div className="sticky top-0 min-h-screen flex flex-col justify-center overflow-hidden py-8 md:py-12 z-10">
+        <section className="px-4 md:px-8 max-w-7xl mx-auto text-center w-full">
+          <style>{`
+            @keyframes slideInLeft {
+              from { opacity: 0; transform: translateX(-30px); }
+              to { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes slideInUp {
+              from { opacity: 0; transform: translateY(20px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-slide-left {
+              animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+              opacity: 0;
+            }
+            .animate-slide-up {
+              animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+              opacity: 0;
+            }
+          `}</style>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
-        {tabs.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-6 py-2 rounded-full font-medium transition-all ${
-              activeTab === tab 
-                ? 'bg-[#005599] text-white shadow-md' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Content Area */}
-      <div className="flex flex-col md:flex-row gap-12 text-left items-center min-h-[400px]">
-        <div className="w-full md:w-1/2 relative rounded-lg overflow-hidden shadow-xl h-64 md:h-96">
-          <img 
-            key={currentContent.image}
-            src={currentContent.image}
-            alt={currentContent.title} 
-            className="w-full h-full object-cover animate-in fade-in duration-500"
-          />
-          <div className="absolute inset-0 bg-blue-900/20 mix-blend-multiply pointer-events-none"></div>
-        </div>
-        
-        <div className="w-full md:w-1/2 space-y-6">
-          <h3 className="text-2xl font-bold text-[#003366]">{currentContent.title}</h3>
-          <p className="text-gray-600 leading-relaxed">
-            {currentContent.description}
+          <h2 className="text-4xl font-bold text-[#003366] mb-4">
+            How We Transform <span className="text-lime-500">Your Business</span>
+          </h2>
+          <p className="text-gray-600 max-w-3xl mx-auto mb-12">
+            Our solutions combine technology, automation, and industry expertise to help organizations modernize operations and accelerate digital growth.
           </p>
-          <ul className="space-y-3">
-            {currentContent.capabilities.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3 text-gray-700">
-                <Check className="w-5 h-5 text-lime-500 flex-shrink-0 mt-0.5" />
-                <span>{item}</span>
-              </li>
+
+          {/* Tabs */}
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
+            {tabs.map(tab => (
+              <button
+                key={tab}
+                onClick={() => handleTabClick(tab)}
+                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                  activeTab === tab 
+                    ? 'bg-[#005599] text-white shadow-md scale-105' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {tab}
+              </button>
             ))}
-          </ul>
-          <button className="bg-[#005599] hover:bg-[#003366] text-white font-medium py-3 px-6 rounded transition-colors mt-4 uppercase text-sm tracking-wide">
-            {currentContent.cta}
-          </button>
-        </div>
+          </div>
+
+          {/* Content Area */}
+          <div className="flex flex-col md:flex-row gap-12 text-left items-center min-h-[400px]">
+            {/* Text Area */}
+            <div key={`text-${activeTab}`} className="w-full md:w-1/2 space-y-6 order-2 md:order-1">
+              <h3 className="text-2xl font-bold text-[#003366] animate-slide-left" style={{ animationDelay: '0ms' }}>
+                {currentContent.title}
+              </h3>
+              <p className="text-gray-600 leading-relaxed animate-slide-left" style={{ animationDelay: '100ms' }}>
+                {currentContent.description}
+              </p>
+              <ul className="space-y-4 pt-2">
+                {currentContent.capabilities.map((item, idx) => {
+                  const Icon = item.icon;
+                  return (
+                    <li 
+                      key={idx} 
+                      className="flex items-start gap-4 text-gray-700 animate-slide-up group"
+                      style={{ animationDelay: `${200 + (idx * 150)}ms` }}
+                    >
+                      <div className="p-1.5 bg-lime-50 rounded-lg group-hover:bg-lime-100 transition-colors">
+                        <Icon className="w-6 h-6 text-lime-500 flex-shrink-0" />
+                      </div>
+                      <span className="mt-1 font-medium">{item.text}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="animate-slide-up" style={{ animationDelay: '600ms' }}>
+                <button className="bg-[#005599] hover:bg-[#003366] text-white font-medium py-3 px-6 rounded transition-colors mt-4 uppercase text-sm tracking-wide shadow-md">
+                  {currentContent.cta}
+                </button>
+              </div>
+            </div>
+
+            {/* Video Area */}
+            <div className="w-full md:w-1/2 relative rounded-lg overflow-hidden shadow-xl h-64 md:h-96 order-1 md:order-2">
+              <video 
+                key={`vid-${currentContent.video}`} 
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+                style={{ animation: 'slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
+              >
+                <source src={currentContent.video} />
+              </video>
+              <div className="absolute inset-0 bg-blue-900/10 pointer-events-none"></div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   );
 };
 
