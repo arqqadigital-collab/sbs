@@ -4,6 +4,7 @@ import {
   ClipboardList, MonitorPlay, HeartPulse, CreditCard,
   BrainCircuit, ShieldCheck, UserPlus, Plug
 } from 'lucide-react';
+import GlowingButton from '@/components/ui/GlowingButton';
 
 interface TabCapability {
   text: string;
@@ -120,7 +121,7 @@ const TransformSection = () => {
   };
 
   return (
-    <div ref={sectionRef} className="relative h-[200vh] bg-white">
+    <div ref={sectionRef} className="relative h-[200vh] bg-white mt-24 lg:mt-32">
       <div className="sticky top-0 min-h-screen flex flex-col justify-center overflow-hidden py-8 md:py-12 z-10">
         <section className="px-4 md:px-8 max-w-7xl mx-auto text-center w-full">
           <style>{`
@@ -194,9 +195,9 @@ const TransformSection = () => {
                 })}
               </ul>
               <div className="animate-slide-up" style={{ animationDelay: '600ms' }}>
-                <button className="bg-[#005599] hover:bg-[#003366] text-white font-medium py-3 px-6 rounded transition-colors mt-4 uppercase text-sm tracking-wide shadow-md">
+                <GlowingButton className="mt-4">
                   {currentContent.cta}
-                </button>
+                </GlowingButton>
               </div>
             </div>
 

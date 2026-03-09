@@ -1,8 +1,8 @@
 import { Phone, Linkedin, Twitter, Facebook, Instagram } from 'lucide-react';
+import GlowingButton from '@/components/ui/GlowingButton';
 
 const ContactSection = () => (
   <section className="py-24 bg-gray-50 relative overflow-hidden">
-    {/* Faded Lines Map Background */}
     <div 
       className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
       style={{ 
@@ -20,10 +20,8 @@ const ContactSection = () => (
 
       <div className="flex flex-col md:flex-row gap-8 lg:gap-12 items-stretch">
         
-        {/* Contact Info - Left Column */}
         <div className="w-full md:w-1/3 flex flex-col gap-6">
           
-          {/* Global Offices Box */}
           <div className="bg-lime-500 mix-blend-multiply p-8 rounded-xl text-white shadow-lg flex-1 border border-lime-400/20">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
               <Phone className="w-5 h-5 text-white" />
@@ -53,7 +51,6 @@ const ContactSection = () => (
             </ul>
           </div>
 
-          {/* Connect With Us Box */}
           <div className="bg-[#1a4b8c] mix-blend-multiply p-8 rounded-xl text-white shadow-lg shrink-0 border border-blue-400/20">
              <h4 className="font-bold mb-6 text-xl">Connect With Us</h4>
              <div className="flex gap-4">
@@ -73,7 +70,6 @@ const ContactSection = () => (
           </div>
         </div>
 
-        {/* Form - Right Column */}
         <div className="w-full md:w-2/3 bg-white mix-blend-multiply p-8 rounded-xl border border-gray-100 shadow-xl">
           <form className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -110,9 +106,9 @@ const ContactSection = () => (
             </div>
 
             <div className="flex justify-end pt-2">
-               <button type="button" className="bg-lime-500 hover:bg-lime-600 text-white font-bold py-3 px-8 rounded transition-colors w-full md:w-auto uppercase tracking-wide text-sm">
+               <GlowingButton type="button" className="w-full md:w-auto">
                   Send Message
-               </button>
+               </GlowingButton>
             </div>
           </form>
         </div>

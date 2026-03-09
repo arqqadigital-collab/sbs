@@ -1,7 +1,9 @@
 import Hero from '@/components/sections/Hero';
 import TransformSection from '@/components/sections/TransformSection';
 import DeliverSection from '@/components/sections/DeliverSection';
+import ServicesSection from '@/components/sections/ServicesSection';
 import TrustedSection from '@/components/sections/TrustedSection';
+import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import CTABannerSection from '@/components/sections/CTABannerSection';
 import ContactSection from '@/components/sections/ContactSection';
@@ -12,7 +14,9 @@ const Index = () => (
     <Hero />
     <TransformSection />
     <DeliverSection />
+    <ServicesSection />
     <TrustedSection />
+    <CaseStudiesSection />
     <TestimonialSection />
     <CTABannerSection />
     <ContactSection />

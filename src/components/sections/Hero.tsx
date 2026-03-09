@@ -1,8 +1,8 @@
 import Navbar from '@/components/layout/Navbar';
+import GlowingButton from '@/components/ui/GlowingButton';
 
 const Hero = () => (
   <header className="relative overflow-hidden min-h-[600px] flex flex-col bg-[#003366]">
-    {/* Video Background */}
     <video 
       autoPlay 
       loop 
@@ -13,7 +13,6 @@ const Hero = () => (
       <source src="https://res.cloudinary.com/dcjufshrh/video/upload/v1772449781/Untitled-1_jykftk.mp4" type="video/mp4" />
     </video>
 
-    {/* Dark overlay to ensure text remains legible over the video */}
     <div className="absolute inset-0 bg-[#001133]/60 z-0"></div>
 
     <Navbar />
@@ -25,9 +24,9 @@ const Hero = () => (
       <p className="text-blue-50 text-lg md:text-xl max-w-2xl mb-10 drop-shadow-md font-medium">
         End-to-end digital transformation for modern enterprises and healthcare organizations.
       </p>
-      <button className="bg-lime-500 hover:bg-lime-600 text-white font-bold py-3 px-8 rounded transition-colors shadow-lg shadow-lime-500/30 uppercase tracking-wide text-sm">
+      <GlowingButton>
         Start Your Digital Transformation
-      </button>
+      </GlowingButton>
     </div>
   </header>
 );
